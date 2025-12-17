@@ -10,7 +10,7 @@ import {
 export const tasksApi = {
     // Get tasks by column
     getTasksByColumn: async (columnId: number): Promise<TaskSummary[]> => {
-        const response = await apiClient.get<TaskSummary[]>(`/tasks/${columnId}`);
+        const response = await apiClient.get<TaskSummary[]>(`/tasks/column/${columnId}`);
         return response.data;
     },
 

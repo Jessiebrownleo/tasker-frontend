@@ -4,6 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { TaskSummary } from '@/types';
 import { getTaskStatusColor, getTaskStatusLabel } from '@/lib/utils';
+import { FormattedDate } from '@/components/ui/formatted-date';
 
 interface TaskCardProps {
     task: TaskSummary;
@@ -19,7 +20,7 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
         transition,
         isDragging,
     } = useSortable({
-        id: task.id,
+        id: `task-${task.id}`,
         data: {
             type: 'Task',
             task,
@@ -83,7 +84,7 @@ export function TaskCard({ task, onClick }: TaskCardProps) {
                 </span>
                 {task.dueDate && (
                     <span className="text-xs text-gray-500">
-                        {new Date(task.dueDate).toLocaleDateString()}
+                        <FormattedDate date={task.dueDate} mode="date" />
                     </span>
                 )}
             </div>

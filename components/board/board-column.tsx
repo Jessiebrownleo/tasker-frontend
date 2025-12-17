@@ -23,7 +23,7 @@ export function BoardColumn({ column, tasks, onAddTask, onTaskClick }: BoardColu
         transition,
         isDragging,
     } = useSortable({
-        id: column.id,
+        id: `column-${column.id}`,
         data: {
             type: 'Column',
             column,
@@ -69,7 +69,7 @@ export function BoardColumn({ column, tasks, onAddTask, onTaskClick }: BoardColu
                 {/* Tasks List */}
                 <div className="flex-1 overflow-y-auto min-h-[100px] space-y-3 pr-1">
                     <SortableContext
-                        items={tasks.map((t) => t.id)}
+                        items={tasks.map((t) => `task-${t.id}`)}
                         strategy={verticalListSortingStrategy}
                     >
                         {tasks.map((task) => (

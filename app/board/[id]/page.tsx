@@ -35,6 +35,8 @@ import { BoardMembersModal } from '@/components/board/board-members-modal';
 import { LabelManager } from '@/components/board/label-manager';
 import { Users, Tag } from 'lucide-react';
 
+import { CreateTaskModal } from '@/components/task/create-task-modal';
+
 export default function BoardPage() {
     const router = useRouter();
     const params = useParams();
@@ -44,6 +46,7 @@ export default function BoardPage() {
     const [activeColumn, setActiveColumn] = useState<Column | null>(null);
     const [activeTask, setActiveTask] = useState<TaskSummary | null>(null);
     const [activeTaskId, setActiveTaskId] = useState<number | null>(null);
+    const [activeColumnIdForTask, setActiveColumnIdForTask] = useState<number | null>(null);
     const [showMembersModal, setShowMembersModal] = useState(false);
     const [showLabelManager, setShowLabelManager] = useState(false);
     const [showCreateColumn, setShowCreateColumn] = useState(false);
@@ -150,7 +153,9 @@ export default function BoardPage() {
                 newPosition = overTask.position; // This is an approximation
             } else {
                 // Dropped on a column
-                targetColumnId = Number(overId);
+                // overId is now "column-{id}", so we need to parse it or use data
+                const overColumn = over.data.current?.column as Column;
+                targetColumnId = overColumn.id;
                 newPosition = 1; // Top of the list or bottom
             }
 
@@ -234,7 +239,7 @@ export default function BoardPage() {
                             onDragEnd={onDragEnd}
                         >
                             <SortableContext
-                                items={columns.map((c) => c.id)}
+                                items={columns.map((c) => `column-${c.id}`)}
                                 strategy={horizontalListSortingStrategy}
                             >
                                 {columns.map((column) => (
@@ -243,8 +248,7 @@ export default function BoardPage() {
                                         column={column}
                                         tasks={tasksByColumn.get(column.id) || []}
                                         onAddTask={() => {
-                                            // TODO: Open create task modal
-                                            toast.info(`Add task to ${column.name}`);
+                                            setActiveColumnIdForTask(column.id);
                                         }}
                                         onTaskClick={(taskId) => {
                                             setActiveTaskId(taskId);
@@ -323,6 +327,14 @@ export default function BoardPage() {
                         taskId={activeTaskId}
                         boardId={boardId}
                         onClose={() => setActiveTaskId(null)}
+                    />
+                )}
+
+                {/* Create Task Modal */}
+                {activeColumnIdForTask && (
+                    <CreateTaskModal
+                        columnId={activeColumnIdForTask}
+                        onClose={() => setActiveColumnIdForTask(null)}
                     />
                 )}
 

@@ -35,6 +35,10 @@ export default function RegisterPage() {
         setIsLoading(true);
         try {
             const tokens = await authApi.register(data);
+            // Store tokens first so they're available for subsequent API calls
+            localStorage.setItem('accessToken', tokens.accessToken);
+            localStorage.setItem('refreshToken', tokens.refreshToken);
+
             const user = await authApi.getCurrentUser();
             setAuth(user, tokens.accessToken, tokens.refreshToken);
             toast.success('Account created successfully!');

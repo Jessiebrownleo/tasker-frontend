@@ -12,6 +12,7 @@ import { getTaskStatusColor, getTaskStatusLabel, formatDateTime, getInitials } f
 import { useAuthStore } from '@/store/auth';
 
 import { LabelPicker } from './label-picker';
+import { FormattedDate } from '@/components/ui/formatted-date';
 
 interface TaskDetailModalProps {
     taskId: number;
@@ -243,13 +244,13 @@ export function TaskDetailModal({ taskId, boardId, onClose }: TaskDetailModalPro
                                                         {comment.author.fullName}
                                                     </span>
                                                     <span className="text-xs text-gray-500">
-                                                        {formatDateTime(comment.createdAt)}
+                                                        <FormattedDate date={comment.createdAt} />
                                                     </span>
                                                 </div>
                                                 <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm text-gray-700 text-sm">
                                                     {comment.body}
                                                 </div>
-                                                {user?.id === comment.authorId && (
+                                                {user?.id === comment.author.id && (
                                                     <button
                                                         onClick={() => deleteCommentMutation.mutate(comment.id)}
                                                         className="text-xs text-red-500 hover:underline mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -295,11 +296,11 @@ export function TaskDetailModal({ taskId, boardId, onClose }: TaskDetailModalPro
                                 <div className="space-y-3 text-sm">
                                     <div>
                                         <span className="text-gray-500 block text-xs">Created</span>
-                                        <span className="text-gray-700">{task?.createdAt && formatDateTime(task.createdAt)}</span>
+                                        <span className="text-gray-700">{task?.createdAt && <FormattedDate date={task.createdAt} />}</span>
                                     </div>
                                     <div>
                                         <span className="text-gray-500 block text-xs">Updated</span>
-                                        <span className="text-gray-700">{task?.updatedAt && formatDateTime(task.updatedAt)}</span>
+                                        <span className="text-gray-700">{task?.updatedAt && <FormattedDate date={task.updatedAt} />}</span>
                                     </div>
                                 </div>
                             </div>
